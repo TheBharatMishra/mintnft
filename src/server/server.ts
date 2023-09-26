@@ -25,30 +25,29 @@ app.post("/upload", cors(), upload.single("file"), async (req, res) => {
   let data = new FormData();
 
   const blob = new Blob([req.file?.buffer], { type: req.file?.mimetype });
-  data.append("file", blob, { filename : req.file?.originalname  });
+  data.append("file", blob, { filename: req.file?.originalname });
   data.append("isSync", "true");
 
-async function uploadImageOnIPFS = (){
-    const ipfsImg = await starton.post('/ipfs/file',data,{
-        headers:{'Content-Type':`multipart/form-data; boundary=${data._boundary}` }
-    })
+  async function uploadImageOnIPFS() {
+    const ipfsImg = await starton.post("/ipfs/file", data, {
+      headers: {
+        "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
+      },
+    });
     return ipfsImg.data;
-}
-async function uploadMetaDataOnIpfs(imgCid:any) {
-    const metaDataJson= {
-        name:'A Wonderfull NFT',
-        description: 'Probably the most wonderful image',
-        image:`ipfs://ipfs/${imgCid}`
-    }
+  }
+  async function uploadMetaDataOnIpfs(imgCid: any) {
+    const metaDataJson = {
+      name: "A Wonderfull NFT",
+      description: "Probably the most wonderful image",
+      image: `ipfs://ipfs/${imgCid}`,
+    };
 
-    const ipfsMetaData = await starton.post('/ipfs/json',{
-        name:'My NFT MetaData JSON',
-        content:metaDataJson,
-        isSync:true
-    }
-    )
+    const ipfsMetaData = await starton.post("/ipfs/json", {
+      name: "My NFT MetaData JSON",
+      content: metaDataJson,
+      isSync: true,
+    });
     return ipfsMetaData.data;
-}
+  }
 });
-
-
